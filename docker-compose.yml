@@ -1,0 +1,33 @@
+services:
+  patients-api:
+    build:
+      context: .
+      dockerfile: Patients.Api.Dockerfile
+    environment:
+      - TZ=${TZ}
+      - CORECLR_ENABLE_PROFILING=1
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - '8000:80'
+
+  db:
+    image: 'postgres:17.5'
+    restart: always
+    environment:
+      POSTGRES_DB: test
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test # initdb
+      PGPASSWORD: test # psql
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./Database/data:/var/lib/postgresql/data
+      - ./Database/init:/docker-entrypoint-initdb.d
+    ports:
+      - 127.0.0.42:5432:5432
+
+networks:
+  default:
+    external: true
+    name: dev

@@ -1,0 +1,1 @@
+@dotnet ef --startup-project ..\Patients.Api %*
